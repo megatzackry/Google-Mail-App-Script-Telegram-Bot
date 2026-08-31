@@ -2,6 +2,8 @@
 
 An email-verification Telegram bot built entirely on **Google Apps Script** — no server, no hosting bill, no external database. Users verify their email address by chatting with the bot, receive a one-time password (OTP) by email, and once verified get auto-approved into a linked Telegram group. Every update, outgoing message, and error is logged straight into a Google Sheet.
 
+<img width="1672" height="941" alt="googleappscriptsbot_description" src="https://github.com/user-attachments/assets/f98be6b2-1d21-4de4-9d12-41e37d52ee03" />
+
 This project is built on top of the [**Google Apps Script Telegram Bot** template](https://github.com/megatzackry/Google-App-Script-Telegram-Bot) — if you want the bare webhook scaffolding without the email/OTP logic, start there instead.
 
 > ## 🚀 Live Demo
