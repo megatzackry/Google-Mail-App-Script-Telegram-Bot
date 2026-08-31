@@ -4,8 +4,7 @@ An email-verification Telegram bot built entirely on **Google Apps Script** — 
 
 <img width="1672" height="941" alt="googleappscriptsbot_description" src="https://github.com/user-attachments/assets/6179e9aa-cce7-479b-a5cc-0292e02c3fca" />
 
-This project is built on top of the [**Google Apps Script Telegram Bot** template](https://github.com/megatzackry/Google-App-Script-Telegram-Bot) — if you want the bare webhook scaffolding without the email/OTP logic, start there instead.
-
+This project is built on top of the [**Google Apps Script Telegram Bot** template](https://github.com/megatzackry/Google-App-Script-Telegram-Bot)
 > ## 🚀 Live Demo
 >
 > This bot is live and running:
