@@ -118,12 +118,17 @@ function handleMessage(msg){
           ss.cache.set(user.uid, user);
           ss.getss('users').getRange(user.row, 3).setValue(user.email);
           if (user.status === 'requested') bot.approveJoinRequest(user.uid);
-          return;
+          return bot.send({chat_id: user.uid, text: `You have successfully verified as ${user.email}`, 
+          reply_markup: { inline_keyboard: [
+            [{ text: 'Join Google App Scripts Group', url: 'https://t.me/googleappscripts' }],
+            [{ text: 'View this project on GitHub', url: 'https://github.com/megatzackry/Google-Mail-App-Script-Telegram-Bot' }]
+
+          ] }});
         } else if (++user.otp.trl > 2) {
           bot.send({ 
             chat_id: user.uid,
             reply_parameters: { message_id: user.otp.mid },
-            text: '🔒 Maximum attempts reached!',reply_markup: { inline_keyboard: [[{ text: '📩 Request new OTP', callback_data: 'retry' }]] }
+            text: '🔒 Maximum attempts reached!', reply_markup: { inline_keyboard: [[{ text: '📩 Request new OTP', callback_data: 'retry' }]] }
           });
           throw new Errors('Max OTP attempts', `uid: ${user.uid}, email tried: ${user.otp.mail}`);
         }
