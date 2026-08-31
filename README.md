@@ -75,14 +75,12 @@ Because every outgoing API call and every error gets its own logged row, **you g
 1. Start a chat with [@BotFather](https://t.me/BotFather).
 2. Send the command `/newbot`.
 3. Choose a name and a username for your bot.
-
-**Optional, but highly recommended** — enable Guard Mode so the bot can process join requests for your group (this is required for `handleJoinRequest` to work):
+4. Enable Guard Mode (**Optional, but highly recommended** to process join requests for your group)
 - Open the [@BotFather](https://t.me/BotFather) mini app using the button on the bottom left.
 - Click your newly created bot.
 - Go to **Bot Settings**.
 - Turn on **Guard Mode**.
-
-4. Grab your bot token — BotFather will give you something in the form `123456789:AAExample-Token`. Keep the whole string; you'll paste it directly into the script later.
+5. Grab your bot token — BotFather will give you something in the form `123456789:AAExample-Token`. Keep the whole string; you'll paste it directly into the script later.
 
 ### 2. Set Up Your Google Sheet
 1. Create a blank [Google Sheet](https://docs.google.com/spreadsheets/u/0/create).
