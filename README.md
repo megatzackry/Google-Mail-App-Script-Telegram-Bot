@@ -4,8 +4,16 @@ An email-verification Telegram bot built entirely on **Google Apps Script** — 
 
 This project is built on top of the [**Google Apps Script Telegram Bot** template](https://github.com/megatzackry/Google-App-Script-Telegram-Bot) — if you want the bare webhook scaffolding without the email/OTP logic, start there instead.
 
+> ## 🚀 Live Demo
+>
+> This bot is live and running:
+>
+> - **Try it** → [@googleappscriptsbot](https://t.me/googleappscriptsbot) — DM it to start the email verification flow yourself.
+> - **See it gate a real group** → [Google App Scripts](https://t.me/googleappscripts) — join the group; if you haven't verified an email with the bot yet, your request will wait for approval until you do.
+
 ## Table of Contents
 - [What is this?](#what-is-this)
+- [Live Demo](#-live-demo)
 - [What the code does](#what-the-code-does)
 - [Getting Started](#getting-started)
 - [Using This as a Template](#using-this-as-a-template)
@@ -37,10 +45,10 @@ Google Apps Script deploys the script as a **Web App**, giving you a public URL 
   - Any other reply while an OTP is pending is checked against the stored code — correct codes save the verified email to the Sheet and auto-approve a pending group join request; incorrect codes are rejected, with a hard cap of 3 attempts before the user has to request a fresh OTP.
 - **`sendOTP(msg, user, ss, bot)`** — generates a 6-digit code, emails it using `MailApp.sendEmail` with a branded HTML template (dark-mode aware, with a "Verify in Telegram" button and links back to the group, the bot, and both GitHub repos), and replies in Telegram confirming the email was sent, with a **Resend OTP** button.
 - **`forceReply(uid, ss, bot, text, message_id)`** — sends a force-reply prompt asking for an email address, clearing any cached OTP session for that user first.
-- **`handleJoinRequest(cjr)`** — fired when someone requests to join your Telegram group. Already-verified users are approved immediately; unverified users are marked `requested` in the Sheet so that a later successful verification auto-approves them.
+- **`handleJoinRequest(cjr)`** — fired when someone requests to join your Telegram group. Already-verified users are approved immediately (via `answerChatJoinRequestQuery`); unverified users are marked `requested` in the Sheet and sent a guided Web App prompt (`sendChatJoinRequestWebApp`) so a later successful verification auto-approves them. This relies on your bot having Guard Mode enabled — see [step 1](#1-create-a-telegram-bot).
 - **`handleChatMember(cm)`** — tracks member status changes (joined, left, kicked, etc.) inside your configured group and records the latest status against the user's row.
 - **`handleMyChatMember(mcm)`** — tracks the *bot's own* membership in a chat. When the bot is added or promoted, it stores that chat's id as `GROUP_ID` in Script Properties; when the bot is removed, it clears it. This is how the bot knows which group it's managing without you hardcoding a chat id anywhere.
-- **`Telegram`** — a wrapper around the Telegram Bot API (`send`, `setWebhook`, `approveJoinRequest`, etc.) that includes:
+- **`Telegram`** — a wrapper around the Telegram Bot API (`send`, `setWebhook`, `approveJoinRequest`, `answerJoinRequest`, etc.) that includes:
   - Automatic retries for failed or dropped requests.
   - Handling for Telegram's `429` rate-limit responses, respecting the `retry_after` value Telegram sends back.
   - A guard that stops retrying before Apps Script's ~6-minute execution limit is hit, instead of letting the script get killed mid-request.
@@ -66,7 +74,7 @@ Because every outgoing API call and every error gets its own logged row, **you g
 2. Send the command `/newbot`.
 3. Choose a name and a username for your bot.
 
-**Optional, but highly recommended** — enable Guard Mode so BotFather blocks anyone else from being able to log in as your bot via Telegram's Bot Login feature:
+**Optional, but highly recommended** — enable Guard Mode so the bot can process join requests for your group (this is required for `handleJoinRequest` to work):
 - Open the [@BotFather](https://t.me/BotFather) mini app using the button on the bottom left.
 - Click your newly created bot.
 - Go to **Bot Settings**.
