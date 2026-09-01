@@ -14,20 +14,22 @@ function setup() {
   new Telegram().setWebhook(webapp_url, ['message', 'edited_message', 'chat_member', 'callback_query', 'my_chat_member', 'chat_join_request']);
 }
 
+
 function doPost(e) {
-  const u = new Update(e);
+  const update = new Update(e);
+  new Sheet().getss('events').appendRow([new Date(), `Received new ${update.type} updates`, JSON.stringify(update,null,1)]);
   try {
     switch (u.type) {
       case 'message':
-      case 'edited_message': return handleMessage(u[u.type]);
-      case 'chat_member': return handleChatMember(u.chat_member);
-      case 'callback_query': return handleCallback(u.callback_query);
-      case 'my_chat_member': return handleMyChatMember(u.my_chat_member);
-      case 'chat_join_request': return handleJoinRequest(u.chat_join_request);
-      default: throw new Errors('Unhandled update', `type: ${u.type}`);
+      case 'edited_message': return handleMessage(update[update.type]);
+      case 'chat_member': return handleChatMember(update.chat_member);
+      case 'callback_query': return handleCallback(update.callback_query);
+      case 'my_chat_member': return handleMyChatMember(update.my_chat_member);
+      case 'chat_join_request': return handleJoinRequest(update.chat_join_request);
+      default: throw new Errors('Unhandled update', `type: ${update.type}`);
     }
   } catch (error) {
-    Errors.handle(error, u.raw || e.postData.contents);
+    Errors.handle(error, update.raw || e.postData.contents);
   }
 }
 
