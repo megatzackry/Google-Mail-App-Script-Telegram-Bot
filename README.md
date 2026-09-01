@@ -126,8 +126,8 @@ Once that's done, anyone requesting to join the group will be auto-approved if t
 ## External References
 
 [Google Apps Script](https://developers.google.com/apps-script/reference)  
-[Telegram Bot API](https://core.telegram.org/bots/api#getting-updates)  
 [MailApp Service](https://developers.google.com/apps-script/reference/mail/mail-app)  
+[Telegram Bot API](https://core.telegram.org/bots/api#getting-updates)  
 
 ## Using This as a Template
 
