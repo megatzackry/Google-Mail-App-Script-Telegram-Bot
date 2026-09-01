@@ -276,7 +276,8 @@ class Telegram {
   send (pld, end, i = 1) {
     const rsp = this.fetch(`https://api.telegram.org/bot${this.token}/${end}`, { method: 'post', contentType: 'application/json', payload: JSON.stringify(pld), muteHttpExceptions: true }, i);
     if (rsp.ok) {
-      return new Sheet().getss('events').appendRow([new Date(), `Successful ${end}`, '', JSON.stringify(pld, null, 1), JSON.stringify(rsp, null, 1)]);
+      new Sheet().getss('events').appendRow([new Date(), `Successful ${end}`, '', JSON.stringify(pld, null, 1), JSON.stringify(rsp, null, 1)]);
+      return rsp;
     } else if (rsp.error_code === 429) {
       if (i > 2) return rsp;
       const retryAfter = rsp.parameters?.retry_after || 10;
