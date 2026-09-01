@@ -19,7 +19,7 @@ function doPost(e) {
   const update = new Update(e);
   new Sheet().getss('events').appendRow([new Date(), `Received new ${update.type} updates`, JSON.stringify(update,null,1)]);
   try {
-    switch (u.type) {
+    switch (update.type) {
       case 'message':
       case 'edited_message': return handleMessage(update[update.type]);
       case 'chat_member': return handleChatMember(update.chat_member);
