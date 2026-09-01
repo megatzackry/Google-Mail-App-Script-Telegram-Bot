@@ -118,12 +118,11 @@ function handleMessage(msg){
           ss.cache.set(user.uid, user);
           ss.getss('users').getRange(user.row, 3).setValue(user.email);
           if (user.status === 'requested') bot.approveJoinRequest(user.uid);
-          return bot.send({chat_id: user.uid, text: `You have successfully verified as ${user.email}`, 
+          return bot.send({chat_id: user.uid, text: `You are successfully verified as ${user.email}`, 
           reply_markup: { inline_keyboard: [
             [{ text: 'Join Google App Scripts Group', url: 'https://t.me/googleappscripts' }],
             [{ text: 'View this project on GitHub', url: 'https://github.com/megatzackry/Google-Mail-App-Script-Telegram-Bot' }]
-
-          ] }});
+          ] } }, 'sendMessage');
         } else if (++user.otp.trl > 2) {
           bot.send({ 
             chat_id: user.uid,
