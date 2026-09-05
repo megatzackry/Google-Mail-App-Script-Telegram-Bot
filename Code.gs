@@ -14,7 +14,6 @@ function setup() {
   new Telegram().setWebhook(webapp_url, ['message', 'edited_message', 'chat_member', 'callback_query', 'my_chat_member', 'chat_join_request']);
 }
 
-
 function doPost(e) {
   const update = new Update(e);
   new Sheet().getss('events').appendRow([new Date(), `Received new ${update.type} updates`, JSON.stringify(update,null,1)]);
@@ -44,7 +43,7 @@ function forceReply(uid, ss, bot, text = 'Enter your Email Address.', message_id
 
 function handleJoinRequest(cjr){
   const bot = new Telegram();
-  const user = new Sheet().getUserId(cjr.user_chat_id);
+  const user = new Sheet().getUser(cjr.user_chat_id);
   if (user.email) {
     if (cjr.query_id) return bot.answerJoinRequest(cjr.query_id, 'approve', user);
     return bot.approveJoinRequest(cjr.user_chat_id);
@@ -57,7 +56,7 @@ function handleChatMember(cm){
   const ss = new Sheet();
   const bot = new Telegram();
   const newer = cm.new_chat_member;
-  const user = ss.getUserId((newer.user || cm.old_chat_member.user).id);
+  const user = ss.getUser((newer.user || cm.old_chat_member.user).id);
   if (String(cm.chat.id) === bot.groupId){
     if (user.row) ss.getss('users').getRange(user.row, 4).setValue(newer.status);
     if (user.email) return bot.setMemberTag(user.uid, '✓', newer.status); // send welcome group message
@@ -79,7 +78,7 @@ function handleCallback(cbq){
   if (cbq.data && cbq.data === 'retry') {
     const bot = new Telegram();
     const ss = new Sheet();
-    const user = ss.getUserId(cbq.from.id);
+    const user = ss.getUser(cbq.from.id);
     if (user.otp) {
       const remaining = (user.otp.min || 0) - Date.now();
       if (remaining > 0) return bot.answer(cbq.id, `⌛ Please wait ${Math.ceil(remaining / 1000)}s before retrying.`);
@@ -107,7 +106,7 @@ function handleMessage(msg){
     if (msg.is_automatic_forward) return bot.send({ chat_id: msg.chat.id, message_id: msg.message_id },'unpinChatMessage');
     return;
   } else if (msg.chat.type === 'private') {
-    const user = ss.getUserId(msg.chat.id);
+    const user = ss.getUser(msg.chat.id);
     if (msg.text) {
       const txt = msg.text.trim();
       if (/^\/start/.test(txt)) {
@@ -372,7 +371,7 @@ class Sheet {
     return this.ss[s];
   }
 
-  getUserId(uid) {
+  getUser(uid) {
     const cached = this.cache.get(uid);
     if (cached) return new User(JSON.parse(cached));
     const userSheet = this.getss('users');
@@ -380,7 +379,7 @@ class Sheet {
     if (!row) {
       userSheet.appendRow([new Date(), uid]);
       SpreadsheetApp.flush();
-      return this.getUserId(uid);
+      return this.getUser(uid);
     }
     const values = userSheet.getSheetValues(row, 3, 1, 2)[0];
     const user = new User({row, uid, email: values[0], status: values[1]});
